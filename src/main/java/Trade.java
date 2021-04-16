@@ -2,14 +2,14 @@ import java.sql.Timestamp;
 
 public class Trade {
     private final String symbol;
-    private final Timestamp timestamp;
+    private final long timestamp;
     private final double price;
     private final long qty;
     private final String flags;
 
     public Trade(long timestamp, String symbol, double price, long qty, String flags) {
         this.symbol = symbol;
-        this.timestamp = new Timestamp(timestamp);
+        this.timestamp = timestamp;
         this.price = price;
         this.qty = qty;
         this.flags = flags;
@@ -20,7 +20,7 @@ public class Trade {
     }
 
     public Timestamp getTimestamp() {
-        return timestamp;
+        return new Timestamp(timestamp);
     }
 
     public double getPrice() {
@@ -37,15 +37,15 @@ public class Trade {
 
     public String toString() {
         StringBuilder builder = new StringBuilder();
-        builder.append(timestamp.toString());
+        builder.append(getTimestamp());
         builder.appendCodePoint(44);
-        builder.append(symbol);
+        builder.append(getSymbol());
         builder.appendCodePoint(44);
-        builder.append(price);
+        builder.append(getPrice());
         builder.appendCodePoint(44);
-        builder.append(qty);
+        builder.append(getQty());
         builder.appendCodePoint(44);
-        builder.append(flags);
+        builder.append(getFlags());
         return builder.toString();
     }
 }
