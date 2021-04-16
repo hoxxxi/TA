@@ -21,6 +21,20 @@ public class TradeCollectionTest {
         Trade trade3 = new Trade(0,"TEST IT", 0.0, 100, "T");
         collection.insert(trade3);
         assertEquals(trade3, collection.getLargestTrade(), "last inserted largest trade should be returned when we have multiple");
+
+        assertEquals(trade3, collection.removeLast());
+        assertEquals(trade2, collection.getLargestTrade());
+
+        Trade trade4 = new Trade(0,"TEST IT", 0.0, 50, "T");
+        collection.insert(trade4);
+        collection.insert(trade3);
+
+        assertEquals(trade3, collection.getLargestTrade());
+        assertEquals(trade3, collection.removeLast());
+        assertEquals(trade2, collection.getLargestTrade());
+        assertEquals(trade4, collection.removeLast());
+        assertEquals(trade2, collection.removeLast());
+        assertEquals(trade1, collection.getLargestTrade());
     }
 
     @Test
@@ -39,6 +53,9 @@ public class TradeCollectionTest {
         Trade trade3 = new Trade(0,"TEST IT", 0.14d, 100, "T");
         collection.insert(trade3);
         assertEquals(0.1333d, collection.getAveragePrice(), 0.000034, "correctly calculates the average price of 3 trades");
+
+        assertEquals(trade3, collection.removeLast());
+        assertEquals(0.13d, collection.getAveragePrice(), 0.0, "correctly calculates the average price of 2 trades");
     }
 
     @Test
@@ -57,5 +74,8 @@ public class TradeCollectionTest {
         Trade trade3 = new Trade(0,"TEST IT", 0.14d, 100, "T");
         collection.insert(trade3);
         assertEquals(2L, collection.countTradesWith("T"), "filtering multiple trades should be able to correctly identify two with flag T");
+
+        assertEquals(trade3, collection.removeLast());
+        assertEquals(1L, collection.countTradesWith("T"), "filtering two trades should be able to correctly identify the one with flag T");
     }
 }

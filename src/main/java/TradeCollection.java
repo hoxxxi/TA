@@ -1,41 +1,59 @@
-import java.util.ArrayList;
+import java.util.Stack;
 
 public class TradeCollection {
-    private Trade largestTrade;
     private double averagePrice;
-    private final ArrayList<Trade> tradeList;
+    private final Stack<Trade> maxStack;
+    private final Stack<Trade> tradeStack;
 
     /**
      * Constructor used to create an empty TradeCollection
      */
     public TradeCollection() {
-        this.tradeList = new ArrayList<>();
+        this.tradeStack = new Stack<>();
+        this.maxStack = new Stack<>();
     }
 
     /**
      * Constructor used to create TradeCollection with one Trade
      */
     public TradeCollection(Trade trade) {
-        this.tradeList = new ArrayList<>();
+        this.tradeStack = new Stack<>();
+        this.maxStack = new Stack<>();
         this.insert(trade);
     }
 
-    /*
+    /**
      * Largest trade and average trade price are calculated on insertion
      *
      * @param trade to be inserted in the collection
      */
     public void insert(Trade trade) {
-        largestTrade = largestTrade != null && largestTrade.getQty() > trade.getQty() ? largestTrade : trade;
-        averagePrice = (averagePrice * tradeList.size() + trade.getPrice())/(tradeList.size()+1);
-        tradeList.add(trade);
+        averagePrice = (averagePrice * tradeStack.size() + trade.getPrice()) / (double) (tradeStack.size()+1);
+        tradeStack.push(trade);
+        if(maxStack.empty() || trade.getQty() >= maxStack.peek().getQty()) {
+            maxStack.push(trade);
+        }
+    }
+
+    /**
+     * @return last element in the LIFO queue
+     */
+    public Trade removeLast() {
+        Trade trade = tradeStack.pop();
+        averagePrice = tradeStack.empty() ? 0 : (((averagePrice * (tradeStack.size()+1)) - trade.getPrice()) / (double) (tradeStack.size()));
+        if(!maxStack.empty() && trade==maxStack.peek()) {
+            maxStack.pop();
+        }
+        return trade;
     }
 
     /**
      * @return largestTrade in collection, last inserted if there are multiple with the same size, null if empty
      */
     public Trade getLargestTrade(){
-        return largestTrade;
+        if(maxStack.empty())
+            return null;
+        return maxStack.peek();
     }
 
     /**
@@ -45,11 +63,11 @@ public class TradeCollection {
         return averagePrice;
     }
 
-    /*
+    /**
      * @param flag used to filter the trade collection
      * @return number of trades containing the flag parameter
      */
     public long countTradesWith(String flag){
-        return tradeList.stream().filter(s -> s.getFlags().contains(flag)).count();
+        return tradeStack.stream().filter(s -> s.getFlags().contains(flag)).count();
     }
 }
