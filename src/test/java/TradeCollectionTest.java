@@ -1,7 +1,6 @@
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class TradeCollectionTest {
 
@@ -35,6 +34,9 @@ public class TradeCollectionTest {
         assertEquals(trade4, collection.removeLast());
         assertEquals(trade2, collection.removeLast());
         assertEquals(trade1, collection.getLargestTrade());
+        assertTrue(collection.remove(trade1));
+        assertEquals(null, collection.getLargestTrade());
+        assertEquals(0, collection.size());
     }
 
     @Test
@@ -56,6 +58,9 @@ public class TradeCollectionTest {
 
         assertEquals(trade3, collection.removeLast());
         assertEquals(0.13d, collection.getAveragePrice(), 0.0, "correctly calculates the average price of 2 trades");
+
+        assertTrue(collection.remove(trade1));
+        assertEquals(0.11d, collection.getAveragePrice(), 0.000034, "the price of a single trade should be the average price");
     }
 
     @Test
@@ -77,5 +82,8 @@ public class TradeCollectionTest {
 
         assertEquals(trade3, collection.removeLast());
         assertEquals(1L, collection.countTradesWith("T"), "filtering two trades should be able to correctly identify the one with flag T");
+
+        assertTrue(collection.remove(trade1));
+        assertEquals(0L, collection.countTradesWith("T"), "single trade collection with flag X should contain no flags with flag T");
     }
 }

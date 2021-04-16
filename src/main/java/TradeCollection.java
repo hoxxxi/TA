@@ -36,7 +36,9 @@ public class TradeCollection {
     }
 
     /**
-     * @return last element in the LIFO queue
+     * Fast removal of last element in TradeCollection O(1)
+     *
+     * @return the removed element from the collection
      */
     public Trade removeLast() {
         Trade trade = tradeStack.pop();
@@ -45,6 +47,22 @@ public class TradeCollection {
             maxStack.pop();
         }
         return trade;
+    }
+
+    /**
+     * Slow removal of a particular element in TradeCollection O(n)
+     *
+     * @param trade to be removed from the collection
+     * @return true if element was in the collection and successfully removed, false otherwise
+     */
+    public boolean remove(Trade trade) {
+        averagePrice = tradeStack.size()<2 ? 0 : (((averagePrice * tradeStack.size()) - trade.getPrice()) / (double) (tradeStack.size()-1));
+        maxStack.remove(trade);
+        return tradeStack.remove(trade);
+    }
+
+    public int size(){
+        return tradeStack.size();
     }
 
     /**
